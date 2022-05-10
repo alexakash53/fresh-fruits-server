@@ -56,7 +56,42 @@ async function run() {
             const result = await productsCollection.deleteOne(query);
             res.send(result);
         })
+
+        //updating stock by using update stock button
+            app.put('/updatestock/:id', async (req, res) =>{
+            const id =  req.params.id; 
+            const updateInfo=req.body;
+            const filter={_id: ObjectId(id) };
+            const options = {upsert: true };
+            const updatedDoc = {
+            $set:{
+            quantity: updateInfo.quantity,
+            sold: updateInfo.sold
+            }
+        }
+            const result=await productsCollection.updateOne (filter, updatedDoc, options);
+            res.send(result);
+            })
+
+            // handleSoldUpdate
+            app.put('/updatesold/:id', async (req, res) =>{
+                const id =  req.params.id; 
+                const updateInfo=req.body;
+                const filter={_id: ObjectId(id) };
+                const options = {upsert: true };
+                const updatedDoc = {
+                $set:{
+                sold: updateInfo.sold
+                }
+            }
+                const result=await productsCollection.updateOne (filter, updatedDoc, options);
+                res.send(result);
+                })
+
+
+
     } finally {
+
 
     }
 }
@@ -71,3 +106,4 @@ app.get('/', async (req, res) => {
 app.listen(port, () => {
     console.log('listing to port', port);
 });
+
